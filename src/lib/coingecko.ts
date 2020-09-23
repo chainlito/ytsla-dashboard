@@ -26,8 +26,17 @@ const getYtslaPrice = async () => {
   return response.data['ytsla-finance'].usd;
 }
 
+const getEthPrice = async () => {
+  const response = await axios({
+    url: `${API_URL}/simple/price?ids=ethereum&vs_currencies=USD`,
+    method: 'GET',
+  });
+  return response.data['ethereum'].usd;
+}
+
 export default {
   getMemePrice,
   getUniPrice,
   getYtslaPrice,
+  getEthPrice,
 };

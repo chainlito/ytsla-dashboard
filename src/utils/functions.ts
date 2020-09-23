@@ -51,3 +51,10 @@ export const secondsToSeconds = (seconds: number) => Math.floor(seconds % 60);
 export const truncateAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4, address.length)}`;
 }
+
+export const getEstimatedPercent = (txCount: number) => {
+  const rate = 1 - (txCount / 600);
+  if (rate > 0.3) return 0.3;
+  if (rate < 0.05) return 0.05;
+  return rate;
+}

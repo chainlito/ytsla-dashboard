@@ -5,12 +5,13 @@ import { numberWithDecimals } from 'utils';
 
 interface OwnProps {
   earned: number;
+  percent: number;
   onHarvest: () => void;
 }
 
 type Props = OwnProps;
 
-export const RewardAsset = ({ earned, onHarvest }: Props) => {
+export const RewardAsset = ({ earned, onHarvest, percent }: Props) => {
   return (
     <Card className='card card-h medium transparent'>
       <CardContent>
@@ -21,13 +22,21 @@ export const RewardAsset = ({ earned, onHarvest }: Props) => {
           <div className='center-h boxsize'>
             <h2>{Config.Token.name}</h2>
           </div>
-          <div className='center-h boxsize'>
-            <span className='text-number'>
-              {numberWithDecimals(earned, Config.Token.decimals, Config.Utils.decimals)}
+          <div className='center-h'>
+            <span className='text-small'>{`Low estimated ${Config.Token.symbol} earned`}</span>
+          </div>
+          <div className='center-h boxsize mb-10'>
+            <span className='text-number small'>
+              {numberWithDecimals(earned * (1 - percent), Config.Token.decimals, Config.Utils.decimals)}
             </span>
           </div>
-          <div className='center-h mb-20'>
-            <span className='text-small'>{`Estimated ${Config.Token.symbol} earned`}</span>
+          <div className='center-h'>
+            <span className='text-small'>{`High estimated ${Config.Token.symbol} earned`}</span>
+          </div>
+          <div className='center-h boxsize'>
+            <span className='text-number small'>
+              {numberWithDecimals(earned * (1 + percent), Config.Token.decimals, Config.Utils.decimals)}
+            </span>
           </div>
         </div>
         <div className='section'>

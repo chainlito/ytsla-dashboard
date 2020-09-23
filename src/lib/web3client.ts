@@ -15,6 +15,7 @@ const poolContract: any = getContract(Config.Pool.abi, Config.Pool.address);
 const memeTokenContract: any = getContract(Config.MemeToken.abi, Config.MemeToken.address);
 const uniTokenContract: any = getContract(Config.UniToken.abi, Config.UniToken.address);
 const uniLpTokenContract: any = getContract(Config.UniLpToken.abi, Config.UniLpToken.address);
+const wethTokenContract: any = getContract(Config.WethToken.abi, Config.WethToken.address);
 
 const pool1Contract: any = getContract(Config.Pool1.abi, Config.Pool1.address);
 const pool2Contract: any = getContract(Config.Pool2.abi, Config.Pool2.address);
@@ -203,6 +204,7 @@ export default {
   uniTokenContract,
   memeTokenContract,
   uniLpTokenContract,
+  wethTokenContract,
   pool1Contract,
   pool2Contract,
   pool3Contract,

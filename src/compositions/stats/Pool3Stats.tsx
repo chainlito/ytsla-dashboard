@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Config from 'config';
 import { RootState } from 'types';
 import { numberWithDecimals } from 'utils';
-import { web3client } from 'lib';
+import { web3client, dexclient } from 'lib';
 import { selectAccount } from 'store/account/accountSelector';
 
 
@@ -19,7 +19,7 @@ interface OwnProps {
 type Props = StateFromProps & DispatchFromProps & OwnProps;
 
 const Pool3Stats = ({ tokenPrice, account }: Props) => {
-  const [token1Price, setToken1Price] = React.useState<number>(90.43);
+  const [token1Price, setToken1Price] = React.useState<number>(0);
 	const [totalStaked, setTotalStaked] = React.useState<number>(0);
 	const [staked, setStaked] = React.useState<number>(0);
   const [roiUnit, setRoiUnit] = React.useState<number>(0);
@@ -35,6 +35,7 @@ const Pool3Stats = ({ tokenPrice, account }: Props) => {
 			web3client.poolGetEarned(web3client.pool3Contract, account.address)
 				.then(res => setEarned(res));
 		}
+		dexclient.getLpTokenPrice().then(res => setToken1Price(res));
 	});
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const Pool3Stats = ({ tokenPrice, account }: Props) => {
 			}
 			setRate(res * staked / Math.pow(10, 36));
 		});
-	}, [tokenPrice, staked]);
+	}, [tokenPrice, staked, token1Price]);
 	
   return (
     <React.Fragment>
@@ -54,7 +55,7 @@ const Pool3Stats = ({ tokenPrice, account }: Props) => {
       	<div className='ystatshead'>PRICES <span className='ybullets'> • • • • • • • • • • • • • • • • • • • • • • • • • •</span></div>
 	  		<div className='flex-h'>
       		<div className='datasplit'>{`1 ${Config.UniLpToken.symbol} =`}</div>
-	  			<div className='blackdata'> {`$ ${token1Price}`}</div>
+	  			<div className='blackdata'> {`$ ${numberWithDecimals(token1Price, 0, 2)}`}</div>
 	  		</div>
 				<div className='flex-h'>
 					<div className='datasplit'>{`1 ${Config.Token.symbol} = `}</div>

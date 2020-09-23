@@ -32,7 +32,7 @@ export const StakeAsset = ({ totalStaked, staked, allowed, onApprove, onStake, o
           <div className='center-h boxsize'>
             <h2>{tokenInfo.name}</h2>
           </div>
-          <div className='center-h boxsize'>
+          <div className='center-h boxsize mt-20'>
             <span className='text-number'>
               {numberWithDecimals(staked, tokenInfo.decimals, Config.Utils.decimals)}
             </span>

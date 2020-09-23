@@ -17,6 +17,10 @@
     @media screen and (max-width: $tablet) {
       font-size: 1.5em;
     }
+
+    &.small {
+      font-size: 1.4em;
+    }
   }
 
   &-small {

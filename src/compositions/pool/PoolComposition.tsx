@@ -22,10 +22,12 @@ import {
   selectStakeTokenBalance,
   selectPoolTotalStaked,
   selectPoolPeriodFinish,
-  selectPoolStakeTokenInfo
+  selectPoolStakeTokenInfo,
+  selectPoolInfo
 } from 'store/pool/poolSelector';
 import { selectAccount } from 'store/account/accountSelector';
-import { getDateLeft, secondsToDays, secondsToHours, secondsToMinutes, secondsToSeconds } from 'utils';
+import { getDateLeft, secondsToDays, secondsToHours, secondsToMinutes, secondsToSeconds, getEstimatedPercent } from 'utils';
+import { ethscanclient } from 'lib';
 
 interface StateFromProps {
   account: ReturnType<typeof selectAccount>;
@@ -36,6 +38,7 @@ interface StateFromProps {
   stakeTokenBalance: ReturnType<typeof selectStakeTokenBalance>;
   deadline: ReturnType<typeof selectPoolPeriodFinish>;
   stakeTokenInfo: ReturnType<typeof selectPoolStakeTokenInfo>;
+  poolInfo: ReturnType<typeof selectPoolInfo>;
 }
 interface DispatchFromProps {
   stake: typeof poolStake;
@@ -65,8 +68,10 @@ const PoolComposition: React.FC<Props> = ({
   loadEarned,
   loadStaked,
   stakeTokenInfo,
+  poolInfo,
 }) => {
   const [timeLeft, setTimeLeft] = React.useState<number>(0);
+  const [estimatePercent, setEstimatePercent] = React.useState<number>(0);
 
   useEffect(() => setTimeLeft(getDateLeft(deadline)), [deadline]);
   useEffect(() => {
@@ -75,8 +80,11 @@ const PoolComposition: React.FC<Props> = ({
   });
   useEffect(() => {
     if (allowed) {
+      
       loadEarned(); loadStaked();
-      const timeInterval = setInterval(() => { loadEarned(); loadStaked(); }, 30000);
+      ethscanclient.getTransactionsCount(poolInfo.address).then(res => 
+        setEstimatePercent(getEstimatedPercent(res)));
+      const timeInterval = setInterval(() => { loadEarned(); loadStaked(); ethscanclient.getTransactionsCount(poolInfo.address); }, 60000);
       return () => clearInterval(timeInterval);
     }
   });
@@ -116,6 +124,7 @@ const PoolComposition: React.FC<Props> = ({
           <div className='center-h wp-100 mt-30 home-container'>
             <RewardAsset
               earned={earned}
+              percent={estimatePercent}
               onHarvest={harvest}
             />
             <StakeAsset
@@ -159,6 +168,7 @@ function mapStateToProps(
     stakeTokenBalance: selectStakeTokenBalance(state),
     deadline: selectPoolPeriodFinish(state),
     stakeTokenInfo: selectPoolStakeTokenInfo(state),
+    poolInfo: selectPoolInfo(state),
   };
 }
 function mapDispatchToProps(dispatch: Dispatch): DispatchFromProps {

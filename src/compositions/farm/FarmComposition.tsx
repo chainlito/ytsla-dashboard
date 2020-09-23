@@ -11,7 +11,7 @@ import PoolCard from './PoolCard';
 import Farm1Icon from 'assets/img/token-stake.png';
 import Farm2Icon from 'assets/img/token-uni.png';
 import Farm3Icon from 'assets/img/token-lp.png';
-import { coingeckoclient, web3client } from 'lib';
+import { coingeckoclient, web3client, dexclient } from 'lib';
 
 interface StateFromProps {
   account: ReturnType<typeof selectAccount>;
@@ -45,10 +45,12 @@ const FarmComposition = () => {
         });
       });
 
-      web3client.poolGetRewardRate(web3client.pool3Contract).then(res => {
-        const roi = res * tokenPrice / Math.pow(10, 18) / 90.43 * 86400 * 365 * 100;
-        setPool3APY(roi);
-    });
+      dexclient.getLpTokenPrice().then(price => {
+        web3client.poolGetRewardRate(web3client.pool3Contract).then(res => {
+          const roi = res * tokenPrice / Math.pow(10, 18) / price * 86400 * 365 * 100;
+          setPool3APY(roi);
+        });
+      });
     }
   }, [tokenPrice]);
 
